@@ -13,6 +13,10 @@ class WelcomeScreen(QDialog):
     def __init__(self):
         super(WelcomeScreen,self).__init__()
         loadUi("ui\welcomescreen.ui",self)
+        
+        if os.path.exists("twitterInfo.db"):
+            os.remove("twitterInfo.db")
+
         self.bg = QButtonGroup()
         self.bg.addButton(self.keyword,1)
         self.bg.addButton(self.username,2)

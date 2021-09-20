@@ -1,5 +1,4 @@
 import tweepy
-import pandas as pd
 from datetime import date
 import sqlite3
 

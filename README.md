@@ -14,7 +14,7 @@ This application allows you to view the last hundred tweets posted by a given se
 - Os
 
 ## How to use
-pip install -r requirements.txt
+pip install -r requirements.txt \n
 python .\src\gui.py
 
 ## Limitations

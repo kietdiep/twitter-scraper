@@ -80,9 +80,9 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>30</x>
       <y>190</y>
-      <width>621</width>
+      <width>881</width>
       <height>431</height>
      </rect>
     </property>
@@ -131,6 +131,19 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
       <string>Hashtags</string>
      </property>
     </column>
+   </widget>
+   <widget class="QPushButton" name="backbutton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>630</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Back</string>
+    </property>
    </widget>
   </widget>
  </widget>

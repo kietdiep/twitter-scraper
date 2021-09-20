@@ -2,62 +2,39 @@ import sqlite3
 import sys
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QStackedWidget, QWidget
+from PyQt5.QtWidgets import QButtonGroup, QDialog, QApplication, QStackedWidget, QWidget
 from PyQt5 import QtCore
 import scraperDB as sb
 import os 
 
-# --------------------------------- Welcome Screen --------------------------------------------------#
 
 class WelcomeScreen(QDialog):
     def __init__(self):
         super(WelcomeScreen,self).__init__()
         loadUi("welcomescreen.ui",self)
-        self.keyword.stateChanged.connect(self.uncheck)
-        self.username.stateChanged.connect(self.uncheck)
-        self.location.stateChanged.connect(self.uncheck)
-        self.hashtag.stateChanged.connect(self.uncheck)
+        self.bg = QButtonGroup()
+        self.bg.addButton(self.keyword,1)
+        self.bg.addButton(self.username,2)
+        self.bg.addButton(self.location,3)
+        self.bg.addButton(self.hashtag,4)
         
         self.keyword.stateChanged.connect(self.is_checked)
         self.username.stateChanged.connect(self.is_checked)
         self.location.stateChanged.connect(self.is_checked)
         self.hashtag.stateChanged.connect(self.is_checked)
-               
-        #takes in input variables
         
         self.search.clicked.connect(self.get_search_input)
         
-        self.search.clicked.connect(self.completeSearch)
+        self.search.clicked.connect(self.hide)
 
+
+#need to find a way to pass variables
     def completeSearch(self):
         com_search = SearchScreen(self.filterCrit,self.userInput)
         widget.addWidget(com_search)
         widget.setCurrentIndex(widget.currentIndex()+1)
         
         
-
-
-    #Problems with this code is that it takes two clicks to clear a checkbox
-    #causes more problems with the is_checked function... will look into in future
-    def uncheck(self):
-        if self.sender() == self.keyword:
-            self.username.setChecked(False)
-            self.location.setChecked(False)
-            self.hashtag.setChecked(False)
-        elif self.sender() == self.username:
-            self.keyword.setChecked(False)
-            self.location.setChecked(False)
-            self.hashtag.setChecked(False)
-        elif self.sender() == self.location:
-            self.keyword.setChecked(False)
-            self.username.setChecked(False)
-            self.hashtag.setChecked(False)
-        elif self.sender() == self.hashtag:
-            self.keyword.setChecked(False)
-            self.username.setChecked(False)
-            self.location.setChecked(False)
-
-    #works first try but if you try to change your filter it will bug out
     def is_checked(self):
         if self.keyword.isChecked():
             self.filterCrit = 'k'
@@ -68,12 +45,12 @@ class WelcomeScreen(QDialog):
         elif self.hashtag.isChecked():
             self.filterCrit = '#'
         else:
-            #default will be keyword
             self.filterCrit = 'not working'
         
     def get_search_input(self):
         self.userInput = self.inputField.text()
-        
+
+
 
 # --------------------------------- Search Screen --------------------------------------------------#
 
@@ -81,10 +58,11 @@ class SearchScreen(QDialog):
     def __init__(self, filterCrit, userInput):
         super(SearchScreen,self).__init__()
         loadUi("output.ui",self) 
+        self.tableWidget.setColumnWidth(2, 350)
         scraped = sb.Scraper(filterCrit,userInput)
         # scraper class obsolete here, could have just used a python file of just functions to create the database but will keep it as mental note for how i came to my solution
         self.loaddata()
-        
+        self.backbutton.clicked.connect(self.hide)
 
 
     def loaddata(self):
@@ -109,21 +87,28 @@ class SearchScreen(QDialog):
 
 
 
+class Manager:
+    def __init__(self) -> None:
+        self.welcomeScr = WelcomeScreen()
+        self.searchScr = SearchScreen()
+
+        self.welcomeScr.search.clicked.connect(self.search.show)
+        self.searchScr.backbutton.clicked.connect(self.welcomeScr.show)
+
+        self.welcomeScr.show()
 
 
+#fix code here to execute manager first
 
-# --------------------------------- Main --------------------------------------------------#
-
-#main
-app = QApplication(sys.argv)
-welcome = WelcomeScreen()
-widget = QStackedWidget()
-widget.addWidget(welcome)
-widget.setFixedHeight(731)
-widget.setFixedWidth(941)
-widget.show()
-try:
-    sys.exit(app.exec())
-except:
-    print("Exiting")
-
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    welcome = WelcomeScreen()
+    widget = QStackedWidget()
+    widget.addWidget(welcome)
+    widget.setFixedHeight(731)
+    widget.setFixedWidth(941)
+    widget.show()
+    try:
+        sys.exit(app.exec())
+    except:
+        print("Exiting")

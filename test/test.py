@@ -12,16 +12,14 @@ import os
 class WelcomeScreen(QDialog):
     def __init__(self):
         super(WelcomeScreen,self).__init__()
-        loadUi("welcomescreen.ui",self)
+        loadUi("ui\welcomescreen.ui",self)
         self.bg = QButtonGroup()
         self.bg.addButton(self.keyword,1)
         self.bg.addButton(self.username,2)
-        self.bg.addButton(self.location,3)
-        self.bg.addButton(self.hashtag,4)
+        self.bg.addButton(self.hashtag,3)
         
         self.keyword.stateChanged.connect(self.is_checked)
         self.username.stateChanged.connect(self.is_checked)
-        self.location.stateChanged.connect(self.is_checked)
         self.hashtag.stateChanged.connect(self.is_checked)
         
         self.search.clicked.connect(self.get_search_input)
@@ -39,8 +37,6 @@ class WelcomeScreen(QDialog):
             self.filterCrit = 'k'
         elif self.username.isChecked():
             self.filterCrit = 'u'
-        elif self.location.isChecked():
-            self.filterCrit = 'c'
         elif self.hashtag.isChecked():
             self.filterCrit = '#'
         else:
@@ -49,27 +45,31 @@ class WelcomeScreen(QDialog):
     def get_search_input(self):
         self.userInput = self.inputField.text()
         
+        
 
 # --------------------------------- Search Screen --------------------------------------------------#
 
 class SearchScreen(QDialog):
     def __init__(self, filterCrit, userInput):
         super(SearchScreen,self).__init__()
-        loadUi("output.ui",self) 
+        loadUi("ui\output.ui",self) 
         self.tableWidget.setColumnWidth(2, 350)
         scraped = sb.Scraper(filterCrit,userInput)
         # scraper class obsolete here, could have just used a python file of just functions to create the database but will keep it as mental note for how i came to my solution
         self.loaddata()
-        self.backbutton.clicked.connect(self.goPrev)
+        self.search2.clicked.connect(self.goPrev)
+        self.closebutton.clicked.connect(self.exit)
 
 
     def goPrev(self):
-        widget.setCurrentIndex(widget.currentIndex()-1)
         if os.path.exists("twitterInfo.db"):
             os.remove("twitterInfo.db")
         else:
             print("The file does not exist")
+        os.execl(sys.executable, sys.executable, *sys.argv)
 
+    def exit(self):
+        exit()
 
     def loaddata(self):
         conn = sqlite3.connect("twitterInfo.db")

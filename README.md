@@ -1,6 +1,10 @@
 # twitter-scraper
 
 
+
+https://user-images.githubusercontent.com/32941163/139967497-12d29910-78ee-4b9f-8203-96bc2b553662.mp4
+
+
 ## Features
 
 This application allows you to view the last hundred tweets posted by a given search criteria (keyword, username, location, hashtag)
